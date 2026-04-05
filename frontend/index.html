@@ -187,10 +187,47 @@
                 本版本已移除所有商业插件。核心 L1/L2/L3 防御逻辑保持开启。
             </div>
         </div>
+
+        <!-- 🚀 新增：管理联调面板 (Final Validation 专用) -->
+        <div class="card" style="border: 1px solid rgba(16, 185, 129, 0.2);">
+            <div class="card-header">⚙️ 系统管理联调 (Management)</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.75rem;">
+                <div class="tx-item" onclick="showDetail('account')" style="cursor:pointer; flex-direction:column; align-items:flex-start;">
+                    <b>👤 账户</b><span id="mgmt-account">点击获取</span>
+                </div>
+                <div class="tx-item" onclick="showDetail('billing')" style="cursor:pointer; flex-direction:column; align-items:flex-start;">
+                    <b>💰 账单</b><span id="mgmt-billing">点击获取</span>
+                </div>
+                <div class="tx-item" onclick="showDetail('model_store')" style="cursor:pointer; flex-direction:column; align-items:flex-start;">
+                    <b>📦 模型库</b><span id="mgmt-models">点击获取</span>
+                </div>
+                <div class="tx-item" onclick="showDetail('detail')" style="cursor:pointer; flex-direction:column; align-items:flex-start;">
+                    <b>🔍 详情</b><span id="mgmt-detail">点击获取</span>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
 <script>
+    async function showDetail(type) {
+        try {
+            const res = await fetch(`/api/${type}`);
+            const data = await res.json();
+            const target = {
+                'account': 'mgmt-account',
+                'billing': 'mgmt-billing',
+                'model_store': 'mgmt-models',
+                'detail': 'mgmt-detail'
+            }[type];
+            
+            if (type === 'account') document.getElementById(target).innerText = `${data.owner} (${data.tier})`;
+            if (type === 'billing') document.getElementById(target).innerText = `$${data.balance} (Saved: $${data.saved_usd.toFixed(2)})`;
+            if (type === 'model_store') document.getElementById(target).innerText = `${data.active}`;
+            if (type === 'detail') document.getElementById(target).innerText = `V${data.version} | Layers: ${data.defense_layers.length}`;
+            
+        } catch (e) { console.error(`Failed to fetch ${type}`); }
+    }
     async function fetchStatus() {
         try {
             const res = await fetch('/api/status');

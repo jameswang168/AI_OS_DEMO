@@ -37,6 +37,41 @@ class DashboardAPIHandler(http.server.BaseHTTPRequestHandler):
                 "bytes_out": self.sim.auditor.bytes_out,
                 "ledger_count": ledger_count
             })
+        elif self.path == "/api/vault/status":
+            # 5. 获取模拟账本 (Demo 专用) - 移至 GET 以适配前端
+            vault_path = os.path.join(project_root, "vault", "demo_ledger.json")
+            ledger = []
+            if os.path.exists(vault_path):
+                with open(vault_path, 'r', encoding='utf-8') as f:
+                    ledger = json.load(f)
+            self._send_json({"status": "success", "ledger": ledger})
+
+        # --- 新增 Mock APIs 用于 Final Validation ---
+        elif self.path == "/api/account":
+            self._send_json({
+                "node_id": "P100-CLOUD-DEMO-001",
+                "owner": "jameswang168",
+                "status": "ACTIVE",
+                "tier": "SOVEREIGN_VIVA"
+            })
+        elif self.path == "/api/billing":
+            self._send_json({
+                "balance": 1.25,
+                "saved_usd": self.sim.auditor.api_calls * 0.05,
+                "utilization": "LOW",
+                "next_invoice": datetime.now().strftime("%Y-%m-%d")
+            })
+        elif self.path == "/api/model_store":
+            self._send_json({
+                "available": ["Qwen-14B (Local)", "GPT-4o (Cloud Proxy)", "Llama-3 (Adapter)"],
+                "active": "Mixed Mode B"
+            })
+        elif self.path == "/api/detail":
+            self._send_json({
+                "version": "1.3.0",
+                "defense_layers": ["L1_Semantic", "L2_Embedding_Cache", "L3_Dynamic_Router"],
+                "hardware_bypass": "ENABLED"
+            })
         else:
             self.send_error(404)
 
@@ -101,15 +136,6 @@ class DashboardAPIHandler(http.server.BaseHTTPRequestHandler):
                 json.dump(ledger, f, indent=2, ensure_ascii=False)
                 
             self._send_json({"status": "success", "entry": entry})
-
-        # 5. 获取模拟账本 (Demo 专用)
-        elif self.path == "/api/vault/status":
-            vault_path = os.path.join(project_root, "vault", "demo_ledger.json")
-            ledger = []
-            if os.path.exists(vault_path):
-                with open(vault_path, 'r', encoding='utf-8') as f:
-                    ledger = json.load(f)
-            self._send_json({"status": "success", "ledger": ledger})
 
         else:
             self.send_error(404)

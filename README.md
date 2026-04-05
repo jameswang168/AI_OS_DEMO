@@ -1,5 +1,7 @@
-# 天予 Local AI 系统 - 移动内核一期 (Portable Phase-1)
+# 天予 AI OS DEMO - 云端预览版
 
+> 🌐 **云端演示地址**: [https://ai-os-demo.onrender.com/](https://ai-os-demo.onrender.com/)
+> 
 > 💡 **核心主权独立于硬件，插上即可点火（Plug-and-Ignite）！**
 > 本系统通过全平台硬件 Bypass 旁路感知，自适应各类老旧宿主机，维持不妥协的离线隐私底色。
 

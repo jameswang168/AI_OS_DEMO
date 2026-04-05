@@ -1,0 +1,30 @@
+[
+  {
+    "mode": "A",
+    "title": "缠论基础 > 1.2 交易策略与密码",
+    "privacy_level": 1,
+    "route": "LOCAL_INDEX",
+    "privacy_score": "100% Secure"
+  },
+  {
+    "mode": "A",
+    "title": "江恩时间周期 > 1.1 核心理论",
+    "privacy_level": 0,
+    "route": "LOCAL_INDEX",
+    "privacy_score": "100% Secure"
+  },
+  {
+    "mode": "B",
+    "title": "缠论基础 > 1.2 交易策略与密码",
+    "privacy_level": 1,
+    "route": "LOCAL_INDEX_FORCED",
+    "privacy_score": "100% Secure (Rule Match)"
+  },
+  {
+    "mode": "B",
+    "title": "江恩时间周期 > 1.1 核心理论",
+    "privacy_level": 0,
+    "route": "CLOUD_API",
+    "privacy_score": "Normal"
+  }
+]

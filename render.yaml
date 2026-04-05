@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: ai-os-demo
+    runtime: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "python backend/app.py"
+    envVars:
+      - key: DEPLOYMENT_MODE
+        value: cloud_demo
+      - key: PORT
+        value: 8000
+    # 自动扩展与持久化预留 (Render 免费层不支持 Disk，这里注释掉)
+    # disk:
+    #   name: vault-storage
+    #   mountPath: /vault
+    #   sizeGB: 1

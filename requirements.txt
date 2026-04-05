@@ -1,0 +1,3 @@
+# Project Antigravity P100 - Cloud Demo
+# This project is 100% Python Standard Library. 
+# Zero third-party dependencies required.

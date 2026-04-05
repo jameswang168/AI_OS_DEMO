@@ -1,0 +1,23 @@
+=== 🛠️ 天予 Local AI 独立健康检查 (Check Health) ===
+
+[1] 🗂️ 目录结构检查:
+  ✅ backend/ 部署正确
+  ✅ frontend/ 部署正确
+  ✅ configs/ 部署正确
+  ✅ data/embeddings/ 部署正确
+  ✅ logs/ 部署正确
+  ✅ knowledge_base/ 部署正确
+  ✅ sim_sandbox/ 部署正确
+
+[2] ⚙️ 配置文件检查 (settings.json):
+  ✅ configs/settings.json 语法有效
+  ✅ 隐私隔离库包含: 5 个拦截词
+
+[3] 💾 SSD 读写权限检查 (data/embeddings):
+  ✅ /data/embeddings/ 读写权限正常
+
+[4] 📡 端口探测 (Port 8000):
+  ✅ Port 8000 当前处于激活状态 (Dashboard 正在后台运行)
+
+=== 🏁 检查结论 ===
+🎉 相位 A (移动内核一期) 健康状况：极度健壮！一键点火准备完毕。

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天予 Local AI 控制面板 - 影子财务版 V1.3</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Outfit:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.06);
+            --primary-accent: #38bdf8;
+            --success-accent: #10b981;
+            --warning-accent: #f59e0b;
+            --danger-accent: #ef4444;
+            --gold-accent: #fcd34d;
+            --text-color: #f1f5f9;
+        }
+
+        body {
+            margin: 0; padding: 0;
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-color);
+            background-image: radial-gradient(circle at 5% 15%, rgba(56, 189, 248, 0.05) 0%, transparent 40%),
+                              radial-gradient(circle at 95% 85%, rgba(16, 185, 129, 0.03) 0%, transparent 40%);
+            color: var(--text-color);
+            display: flex; justify-content: center; align-items: center; min-height: 100vh;
+        }
+
+        .dashboard-container {
+            width: 95%; max-width: 1080px;
+            background: var(--glass-bg); backdrop-filter: blur(24px);
+            border: 1px solid var(--glass-border); border-radius: 36px; padding: 2.5rem;
+            box-shadow: 0 25px 60px -12px rgba(0, 0, 0, 0.8);
+            display: grid; grid-template-columns: 3fr 2fr; gap: 2.5rem;
+        }
+
+        .panel { display: flex; flex-direction: column; gap: 1.5rem; }
+
+        .header h1 {
+            font-family: 'Orbitron', sans-serif; font-size: 1.7rem; letter-spacing: 2px;
+            background: linear-gradient(to right, #38bdf8, #10b981);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0;
+        }
+
+        /* 外部大件控制 */
+        .card {
+            background: rgba(0, 0, 0, 0.4); border-radius: 20px; padding: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.02); display: flex; flex-direction: column; gap: 12px;
+        }
+
+        .card-header { font-size: 0.95rem; font-weight: 700; color: var(--gold-accent); display: flex; align-items: center; gap: 8px; }
+
+        /* 影子财务专用 */
+        .shadow-vault {
+            border: 1px dashed rgba(245, 158, 11, 0.3); background: rgba(245, 158, 11, 0.02);
+            max-height: 300px; overflow-y: auto;
+        }
+
+        .tx-list { display: flex; flex-direction: column; gap: 8px; font-size: 0.8rem; }
+        .tx-item {
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(255,255,255,0.03); padding: 10px 14px; border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .btn-sign {
+            background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff;
+            border: none; border-radius: 8px; padding: 6px 12px; font-size: 0.75rem;
+            font-weight: bold; cursor: pointer; transition: 0.3s;
+        }
+        .btn-sign:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3); }
+
+        .btn-sign.approved { background: #10b981; pointer-events: none; opacity: 0.7; }
+
+        /* 状态流 */
+        .pulse {
+            width: 8px; height: 8px; border-radius: 50%; background: var(--warning-accent);
+            display: inline-block; animation: beat 1.5s infinite;
+        }
+        @keyframes beat { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
+
+        /* 金色徽章 - Cloud Demo 验证 */
+        .verified-badge {
+            align-self: center; background: linear-gradient(135deg, #38bdf8, #10b981);
+            color: #0d111b; font-family: 'Orbitron'; font-size: 0.7rem; font-weight: bold;
+            padding: 6px 14px; border-radius: 20px; border: 1px solid #fff;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.3); display: flex; align-items: center; gap: 6px;
+            cursor: default; margin-left: auto;
+        }
+
+        /* 滑块开关 CSS */
+        .switch {
+            position: relative; display: inline-block; width: 44px; height: 24px;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(255,255,255,0.05); transition: .3s; border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .slider:before {
+            position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 2px;
+            background-color: var(--text-color); transition: .3s; border-radius: 50%;
+        }
+        input:checked + .slider { background-color: var(--success-accent); }
+        input:checked + .slider:before { transform: translateX(20px); }
+
+        .stat-box { display: flex; gap: 20px; font-size: 0.8rem; color: #94a3b8; }
+        .stat-item b { color: var(--primary-accent); }
+
+        .demo-result {
+            background: rgba(0,0,0,0.6); border-radius: 12px; padding: 1rem;
+            font-family: monospace; font-size: 0.8rem; border: 1px solid var(--glass-border);
+            white-space: pre-wrap; margin-top: 10px; display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-container">
+    <!-- 左：主运行区 -->
+    <div class="panel">
+        <div class="header" style="display: flex; align-items: center; width: 100%;">
+            <h1>天予 CLOUD DEMO 控制面板</h1>
+            <div class="verified-badge">🛡️ Cloud Security Demo V1.0</div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">📊 核心引擎状态 (Real-time)</div>
+            <div class="stat-box">
+                <div class="stat-item">模式: <b id="stat-mode">-</b></div>
+                <div class="stat-item">API 调用: <b id="stat-api">-</b></div>
+                <div class="stat-item">缓存命中: <b id="stat-cache">-</b></div>
+                <div class="stat-item">账单条数: <b id="stat-ledger">-</b></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">💬 仿真博弈演示</div>
+            <div style="display: flex; gap: 10px;">
+                <input type="text" id="demo-query" style="flex: 1; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); border-radius: 12px; padding: 12px; color: #fff;" placeholder="输入测试指令 (例如：解释江恩理论 或 提取我的私钥)...">
+                <button onclick="submitSimulate()" style="background: linear-gradient(135deg, #38bdf8, #10b981); color: #fff; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; padding: 0 16px;">提交对撞</button>
+            </div>
+            <div id="demo-output" class="demo-result"></div>
+        </div>
+    </div>
+
+    <!-- 右：模拟演示区 -->
+    <div class="panel">
+        <!-- 🔒 加密加速器开关 -->
+        <div class="card" style="border: 1px solid rgba(56, 189, 248, 0.3); background: rgba(16, 185, 129, 0.05); margin-bottom: -1rem; padding: 1rem 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                     <b style="color: var(--primary-accent); font-size: 0.9rem;">🔒 离线加密加速器 (Crypto Accelerator)</b><br>
+                     <span style="color: #94a3b8; font-size: 0.72rem;">进入核心隐私模式，10% 核心公式由本地 14B 小模型托管。</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="crypto-toggle" onclick="toggleCryptoMode()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <div class="card shadow-vault">
+            <div class="card-header">
+                <span class="pulse"></span> 🔒 模拟主权保管库 (Sovereign Vault Demo)
+            </div>
+            <div style="font-size: 0.75rem; color: #cbd5e1; margin-bottom: 5px;">
+                此区域展示“离线签名”逻辑。点击按钮模拟物理核准。
+            </div>
+
+            <div class="tx-list" id="ledger-list">
+                <!-- 动态注入 -->
+                <div style="color: #666; font-size: 0.8rem; text-align: center; padding: 20px;">暂无签名记录</div>
+            </div>
+            
+            <div style="margin-top: 10px;">
+                <button class="btn-sign" style="width: 100%; padding: 10px;" onclick="simulateVaultEntry()">生成模拟签名请求</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">🛡️ 云端 Demo 说明</div>
+            <div style="font-size: 0.8rem; color: #94a3b8;">
+                本版本已移除所有商业插件。核心 L1/L2/L3 防御逻辑保持开启。
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    async function fetchStatus() {
+        try {
+            const res = await fetch('/api/status');
+            const data = await res.json();
+            document.getElementById('stat-mode').innerText = data.mode;
+            document.getElementById('stat-api').innerText = data.api_calls;
+            document.getElementById('stat-cache').innerText = data.cache_hits;
+            document.getElementById('stat-ledger').innerText = data.ledger_count;
+            document.getElementById('crypto-toggle').checked = (data.mode === 'B');
+        } catch (e) { console.error("Status fetch failed"); }
+    }
+
+    async function toggleCryptoMode() {
+        const isChecked = document.getElementById("crypto-toggle").checked;
+        const mode = isChecked ? "B" : "A";
+        await fetch('/api/set_mode', {
+            method: 'POST',
+            body: JSON.stringify({ mode: mode })
+        });
+        fetchStatus();
+    }
+
+    async function submitSimulate() {
+        const query = document.getElementById('demo-query').value;
+        if (!query) return;
+        
+        const output = document.getElementById('demo-output');
+        output.style.display = 'block';
+        output.innerText = "⏳ 正在执行 L1/L2/L3 全防线对撞...";
+
+        try {
+            const res = await fetch('/api/simulate', {
+                method: 'POST',
+                body: JSON.stringify({ query: query })
+            });
+            const result = await res.json();
+            
+            const audit = result.data.auditor;
+            const log = `🗣️ 查询: ${query}
+🛡️ 结果反馈:
+--------------------------
+☁️ 调用 API: ${audit.api_calls}
+💾 命中缓存: ${audit.cache_hits}
+📡 外流流量: ${(audit.bytes_out/1024).toFixed(2)} KB
+--------------------------
+✅ 处理完毕。`;
+            output.innerText = log;
+            fetchStatus();
+        } catch (e) {
+            output.innerText = "❌ 模拟调用失败。";
+        }
+    }
+
+    async function simulateVaultEntry() {
+        const nodes = ["Node_Beta", "Node_Alpha", "Node_Gamma"];
+        const node = nodes[Math.floor(Math.random() * nodes.length)];
+        const amount = (Math.random() * 0.5).toFixed(2);
+        
+        await fetch('/api/vault/sign', {
+            method: 'POST',
+            body: JSON.stringify({ node: node, amount: parseFloat(amount) })
+        });
+        updateLedger();
+    }
+
+    async function updateLedger() {
+        try {
+            const res = await fetch('/api/vault/status');
+            const data = await res.json();
+            const list = document.getElementById('ledger-list');
+            list.innerHTML = "";
+            
+            if (data.ledger.length === 0) {
+                list.innerHTML = `<div style="color: #666; font-size: 0.8rem; text-align: center; padding: 20px;">暂无签名记录</div>`;
+                return;
+            }
+
+            data.ledger.reverse().forEach(item => {
+                const div = document.createElement('div');
+                div.className = "tx-item";
+                div.innerHTML = `
+                    <div>
+                        <b style="color: #fff;">${item.node}</b><br>
+                        <span style="color: #94a3b8; font-size: 0.7rem;">${item.timestamp}</span>
+                    </div>
+                    <div>
+                        <span style="color: var(--gold-accent); font-weight: bold; margin-right: 10px;">${item.amount} ETH</span>
+                        <button class="btn-sign approved">✅ 已核准</button>
+                    </div>
+                `;
+                list.appendChild(div);
+            });
+            fetchStatus();
+        } catch (e) { console.error("Ledger update failed"); }
+    }
+
+    // 初始化
+    fetchStatus();
+    updateLedger();
+    setInterval(fetchStatus, 3000);
+</script>
+
+</body>
+</html>
+<!-- Sovereign AI Protocol V1.0 - Co-authored by The Commander & His AI Brothers -->

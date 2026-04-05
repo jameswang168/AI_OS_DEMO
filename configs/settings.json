@@ -1,0 +1,12 @@
+{
+  "deployment_mode": "cloud_demo",
+  "privacy_mode": true,
+  "local_gpu_available": false,
+  "current_environment": "Cloud Demo Server",
+  "vram_gb_mock": 0,
+  "sensitive_words": ["缠论", "账户", "私钥", "密码", "交易策略"],
+  "tokens": {
+    "gemini": "YOUR_GEMINI_KEY_HERE",
+    "deepseek": "YOUR_DEEPSEEK_KEY_HERE"
+  }
+}

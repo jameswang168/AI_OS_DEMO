@@ -1,0 +1,4 @@
+顶底分形和K线合并文件：E:\Project_Antigravity_P100\from_codex_测评师\Kline_merge.py
+用它的方法对数据集AAPL.csv进行划分，得到AAPL_merged_fractals.csv
+最好看一下输入与输出路径是否在同一路径下，不是的话，修改完重新运行一下覆盖AAPL_merged_fractals.csv
+结果由get_data.py产生Bokeh 蜡烛图验证

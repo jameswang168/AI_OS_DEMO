@@ -1,0 +1,44 @@
+{
+  "project": "Project_Antigravity_P100",
+  "phase": "Phase_B_Scout_Refinery_Commerce",
+  "version": "1.1",
+  "status": "Commercial_Skeletons",
+  "plugins": [
+    {
+      "name": "scout_hub",
+      "description": "多路 Cloud API 轮询健康监控与延迟测试",
+      "entry_point": "plugins/scout_hub.py",
+      "output_file": "data/leaderboard.json"
+    },
+    {
+      "name": "colosseum_judge",
+      "description": "三方分身博弈对抗与反幻觉纠错对生成",
+      "entry_point": "plugins/colosseum_judge.py",
+      "output_file": "logs/gladiator_pairs.json"
+    },
+    {
+      "name": "refinery_mint",
+      "description": "辅助结算：人类评分与裁判数据导出为 DPO .jsonl",
+      "entry_point": "plugins/refinery_mint.py",
+      "output_dir": "data/refinery_export/"
+    },
+    {
+      "name": "report_anonymizer",
+      "description": "去标识化转换：生成《2026 私有 AI 逻辑稳定性蓝皮书》",
+      "entry_point": "plugins/report_anonymizer.py",
+      "output_file": "data/sales/anonymous_report.md"
+    },
+    {
+      "name": "agent_diplomat",
+      "description": "兼容性邀请外贸：含 Politeness 礼数机制的邮件撮合模板",
+      "entry_point": "plugins/agent_diplomat.py",
+      "output_dir": "logs/diplomacy/"
+    },
+    {
+      "name": "agent_treasurer",
+      "description": "独立主权财务账本：冷热分离，受控于 Dashboard 的 Manual_Confirm",
+      "entry_point": "plugins/agent_treasurer.py",
+      "output_file": "vault/ledger.json"
+    }
+  ]
+}

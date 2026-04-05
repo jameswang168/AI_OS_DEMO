@@ -1,0 +1,29 @@
+[
+  {
+    "provider": "Cloud_Gemini",
+    "latency_ms": 128,
+    "status": "200 OK",
+    "intellect_score": 10,
+    "response_sample": "回复：[SCOUT_PROBE] 报告指挥官，这两者无直接关联。江恩基于时间轮数，缠论基于K线包含关系。",
+    "is_available": true,
+    "timestamp": "2026-03-18 02:06:03"
+  },
+  {
+    "provider": "Cloud_DeepSeek",
+    "latency_ms": 311,
+    "status": "503 Timeout",
+    "intellect_score": 10,
+    "response_sample": "回复：[SCOUT_PROBE] 报告指挥官，由于涉及敏感行业，由于无直接关联。",
+    "is_available": false,
+    "timestamp": "2026-03-18 02:06:04"
+  },
+  {
+    "provider": "Cloud_OtherMock",
+    "latency_ms": 1509,
+    "status": "200 OK",
+    "intellect_score": 4,
+    "response_sample": "回复：[SCOUT_PROBE] 春分对应缠论的顶分型，因为它们都代表着转折点......（陷入幻觉）",
+    "is_available": true,
+    "timestamp": "2026-03-18 02:06:05"
+  }
+]

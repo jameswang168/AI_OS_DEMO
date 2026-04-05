@@ -1,0 +1,12 @@
+[
+  {
+    "node_alias": "Node_Beta (匿名)",
+    "disposable_address": "0xShadowc638a96d93d7c9f18489cd84a82d6c6093404975",
+    "amount_eth": 0.25,
+    "status": "APPROVED_AND_BROADCASTED",
+    "tx_hex_unsigned": "e426585b244990278a4f60fc19e92b9deb235d99e4c0cd76da157bdb69592bd3",
+    "asset_type": "PRIVACY_COIN (XMR)",
+    "timestamp": "2026-03-18 02:03:28",
+    "broadcast_hash": "0xBroadcast19ec6a0705840a77a876834ff8b1fdda26a32d83"
+  }
+]

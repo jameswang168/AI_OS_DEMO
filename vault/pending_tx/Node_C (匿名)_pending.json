@@ -1,0 +1,9 @@
+{
+  "node_alias": "Node_C (匿名)",
+  "disposable_address": "0xShadow768f6f38dfaea92eaecaf9988e62ea8b2a14ab45",
+  "amount_eth": 0.15,
+  "status": "WAITING_FOR_MANUAL_SIGN",
+  "tx_hex_unsigned": "2daec30c529cd9146d8eecdeddfad5a565852201147a1f957d049b80583a10a2",
+  "asset_type": "PRIVACY_COIN (XMR)",
+  "timestamp": "2026-03-18 02:06:05"
+}
